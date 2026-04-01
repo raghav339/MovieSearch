@@ -1,6 +1,10 @@
 import {addToFav,favItems} from './addToFav.js'
 
 const API_KEY = "70dfd756";
+// storing homepage info in localStorage
+let movies =JSON.parse(localStorage.getItem("movie")) || [];
+document.querySelector(".input").value=JSON.parse(localStorage.getItem("input")) || "";
+document.querySelector(".year").value=JSON.parse(localStorage.getItem("year")) || "";
 
 const btn=document.querySelector(".submit");
 btn.addEventListener("click",()=>{
@@ -64,14 +68,36 @@ async function addMovie()
     }
     const res=await fetch(url);
     const data=await res.json();
-    data.Search.forEach((movie,index)=>{
+    if (data.Response === "False") {
+    movies = [];
+    document.querySelector(".bigContainer").innerHTML = "No movies found";
+    return;
+    }
+
+    movies = data.Search;
+    localStorage.setItem("movie",JSON.stringify(movies));
+    localStorage.setItem("input",JSON.stringify(title));
+    localStorage.setItem("year",JSON.stringify(year));
+    display();
+}
+
+async function display()
+{
+    movies.forEach((movie,index)=>{
         const container = document.createElement("div");
         container.className=`container container${index}`;
         // Create Image Div
-        let imgDiv = document.createElement("div");
-        imgDiv.className = `pic pic${index}`;
-        imgDiv.style.backgroundImage = `url('${movie.Poster}')`;
-            
+        // let imgDiv = document.createElement("div");
+        // imgDiv.className = `pic pic${index}`;
+        // imgDiv.style.backgroundImage = `url('${poster}')`;
+        let img = document.createElement("img");
+        img.className = `pic pic${index}`;
+        img.src = movie.Poster !== "N/A" ? movie.Poster : "fallback.jpg";
+
+        // 👇 THIS is the correct error handling
+        img.onerror = () => {
+            img.src = "/error.jpeg";
+        };
         // Create Details Div
         let detailDiv = document.createElement("div");
         detailDiv.className = `details detail${index}`;
@@ -111,10 +137,10 @@ async function addMovie()
         // Structure: Put Ps inside DetailDiv, then put everything in Container
         btnDiv.append(btnMore,btnFav);
         detailDiv.append(p1,p2,p3,btnDiv);
-        container.append(imgDiv,detailDiv);
+        container.append(img,detailDiv);
         document.querySelector(".bigContainer").append(container);
         })
-        console.log(data);
+        console.log(movies);
 }
 
 async function moreInfo(Id,index)
@@ -144,6 +170,14 @@ async function moreInfo(Id,index)
     let p3 = document.createElement("p");
     p3.innerHTML = `<b>Actors</b>: ${data.Actors}`;
 
+    //gaurding from duplicate if phele yeh run hua the class extra hoga p2,p3,p4 mai
+    // hence ab yeh dekha ki detailDiv mai kisipe extra class hai then function se bahar
+    //if phele run ni hua then yeh extra class exist ni and function se bahar ni 
+    if (detailDiv.querySelector(".extra")) return;
+
+    p2.classList.add("extra");
+    p3.classList.add("extra");
+    p4.classList.add("extra");
 
     // Structure: Put Ps inside DetailDiv, detailDiv already in container toh kuch karne ka req ni
     detailDiv.insertBefore(p2, btn);
@@ -156,6 +190,7 @@ async function moreInfo(Id,index)
 function countFav(num)
 {
     let p=document.querySelector(".count");
-    p.innerHTML=` (${num})`;
+    p.textContent = `(${num})`;
 }
+if (movies.length > 0) display();
 countFav(favItems.length);

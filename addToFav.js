@@ -5,7 +5,9 @@ export async function addToFav(Id,index)
 {
     const res=await fetch(`https://www.omdbapi.com/?i=${Id}&apikey=${API_KEY}`);
     const data =await res.json();
+    if (!favItems.some(item => item.imdbID === data.imdbID)) {
     favItems.push(data);
+    }
     localStorage.setItem("fav",JSON.stringify(favItems)) ;
     return favItems.length;
 }
@@ -21,9 +23,17 @@ function display()
         const container = document.createElement("div");
         container.className=`container`;
         // Create Image Div
-        let imgDiv = document.createElement("div");
-        imgDiv.className = `pic favPic${index}`;
-        imgDiv.style.backgroundImage = `url('${movie.Poster}')`;
+        // let imgDiv = document.createElement("div");
+        // imgDiv.className = `pic favPic${index}`;
+        // imgDiv.style.backgroundImage = `url('${movie.Poster}')`;
+        let img = document.createElement("img");
+        img.className = `pic favPic${index}`;
+        img.src = movie.Poster !== "N/A" ? movie.Poster : "fallback.jpg";
+
+        // 👇 THIS is the correct error handling
+        img.onerror = () => {
+            img.src = "/error.jpeg";
+        };
             
         // Create Details Div
         let detailDiv = document.createElement("div");
@@ -63,7 +73,7 @@ function display()
         // Structure: Put Ps inside DetailDiv, then put everything in Container
         btnDiv.append(btnMore,btnFav);
         detailDiv.append(p1,p2,p3,btnDiv);
-        container.append(imgDiv,detailDiv);
+        container.append(img,detailDiv);
         document.querySelector(".bigContainerFav").append(container);
         })
         console.log(favItems);
