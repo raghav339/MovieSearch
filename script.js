@@ -1,3 +1,5 @@
+import {addToFav} from './addToFav.js'
+
 const API_KEY = "70dfd756";
 
 const btn=document.querySelector(".submit");
@@ -93,6 +95,7 @@ async function addMovie()
         btnMore.innerText="Click to view more";
         btnMore.className=`btnStyle moreBtn${index}`;
         btnMore.addEventListener("click",()=>{
+            btnMore.disabled=true;
             moreInfo(movie.imdbID, index);
         });
 
@@ -100,7 +103,8 @@ async function addMovie()
         btnFav.innerText="Add to Favorites";
         btnFav.className="btnStyle";
         btnFav.addEventListener("click",()=>{
-            console.log("added!");
+            btnFav.disabled=true;
+           addToFav(movie.imdbID, index);
         });
 
         // Structure: Put Ps inside DetailDiv, then put everything in Container
@@ -114,8 +118,6 @@ async function addMovie()
 
 async function moreInfo(Id,index)
 {
-    //disable button now 
-    document.querySelector(`.moreBtn${index}`).disabled=true;
 
     const res=await fetch(`https://www.omdbapi.com/?i=${Id}&apikey=${API_KEY}`);
     const data =await res.json();
