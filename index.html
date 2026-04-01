@@ -3,12 +3,19 @@
 <head>
     <title>MovieSearch App</title>
     <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <h1 style="display:flex;justify-content: center;">Movie Search</h1>
+    <h1 style="display:flex;justify-content: center;"><u><i>Movie Search</i></u></h1>
+    <div class="panel">
     <input placeholder="Enter the movie title" class="input">
     <input type="number" placeholder="Enter year" class="year">
     <button class="submit">Submit</button>
+
+    <p class="icon">
+      Favourites: <p class="count">(0)</p><a href="/favourites.html"><i class="fa-solid fa-book-bookmark"></i></a>
+    </p>
+</div>
     <div class="bigContainer">
     </div>
     <script type="module" src="script.js"></script>

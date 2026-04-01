@@ -1,4 +1,4 @@
-let favItems=JSON.parse(localStorage.getItem("fav"))|| [];
+export let favItems=JSON.parse(localStorage.getItem("fav"))|| [];
 const API_KEY = "70dfd756";
 
 export async function addToFav(Id,index)
@@ -7,6 +7,7 @@ export async function addToFav(Id,index)
     const data =await res.json();
     favItems.push(data);
     localStorage.setItem("fav",JSON.stringify(favItems)) ;
+    return favItems.length;
 }
 
 function display()

@@ -1,4 +1,4 @@
-import {addToFav} from './addToFav.js'
+import {addToFav,favItems} from './addToFav.js'
 
 const API_KEY = "70dfd756";
 
@@ -102,9 +102,10 @@ async function addMovie()
         let btnFav=document.createElement("button");
         btnFav.innerText="Add to Favorites";
         btnFav.className="btnStyle";
-        btnFav.addEventListener("click",()=>{
+        btnFav.addEventListener("click",async ()=>{
             btnFav.disabled=true;
-           addToFav(movie.imdbID, index);
+           let num=await addToFav(movie.imdbID, index);
+           countFav(num);
         });
 
         // Structure: Put Ps inside DetailDiv, then put everything in Container
@@ -151,3 +152,10 @@ async function moreInfo(Id,index)
 
     console.log(data);
 }
+
+function countFav(num)
+{
+    let p=document.querySelector(".count");
+    p.innerHTML=` (${num})`;
+}
+countFav(favItems.length);

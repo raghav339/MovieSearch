@@ -34,3 +34,14 @@
 {
     margin-left:20px;
 }
+
+.icon {
+  margin-left: auto;
+  font-size: 20px;
+}
+.panel {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+}
